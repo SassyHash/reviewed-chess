@@ -20,7 +20,7 @@ class Game
     game.close
   end
 
-  def create_pawns
+  def create_pawns #you could I guess make it shorter by making one line of making pawns with black or white.
     8.times do |i|
       @gameboard[1] << Pawn.new(self, 1, [1,i])
       @gameboard[1].shift
@@ -36,9 +36,9 @@ class Game
               King.new(self, 1), Bishop.new(self, 1), Knight.new(self, 1), Rook.new(self, 1)]
     black = [Rook.new(self, 2), Knight.new(self, 2), Bishop.new(self, 2), King.new(self, 2),
               Queen.new(self, 2), Bishop.new(self, 2), Knight.new(self, 2), Rook.new(self, 2)]
-    white.each_with_index do |piece, i|
+    white.each_with_index do |piece, i| #I see that you passed in location to set for either black or white but it seems rather counterintuitive.
       piece.current_loc = [0,i]
-      @gameboard[0] << piece
+      @gameboard[0] << piece #I don't see why you had to push it in to shift it out from the beginning.
       @gameboard[0].shift
     end
     black.each_with_index do |piece, i|
@@ -48,7 +48,7 @@ class Game
     end
   end
 
-  def print_gameboard
+  def print_gameboard #Very pretty board!
     puts "     A  B  C  D  E  F  G  H "
     puts "     -  -  -  -  -  -  -  - "
     @gameboard.each_with_index do |row, i|
@@ -68,7 +68,7 @@ class Game
     user_settings
     create_gameboard
     print_gameboard
-    while true
+    while true #We also had two players' turns in one loop. But Ned suggested we have one move method and "current player" until there is a valid move.
       puts "Player 1's turn"
       @player1.make_move
       print_gameboard
@@ -98,7 +98,7 @@ class HumanPlayer
                       "H" => 7}
   attr_accessor :team, :current_game, :captured
 
-  def initialize(team, game)
+  def initialize(team, game) #Why do you need a game? Is this an object or an instance variable?
     @team = team
     @game = game
     @captured = []
@@ -109,7 +109,7 @@ class HumanPlayer
       puts "Where do you want to go (ex: A6, B7)"
       input = gets.chomp
       if input.include?(",")
-        return input
+        return input #I like this loop for valid input
       else
         puts "Invalid input"
       end
@@ -118,14 +118,14 @@ class HumanPlayer
 
   def process_input
     input = get_input.split(", ").map! { |pair| pair.split("") }
-    x2 = POSITION_MAPPING[(input[0][0].upcase)]
+    x2 = POSITION_MAPPING[(input[0][0].upcase)] #It broke here when I was trying to run it :(
     y2 = POSITION_MAPPING[(input[1][0].upcase)]
     x1 = input[0][1].to_i
     y1 = input[1][1].to_i
     [[x1, x2], [y1, y2]]
   end
 
-  def make_move
+  def make_move #concise method
     while true
       input = process_input
       if valid_move?(input)
@@ -151,7 +151,7 @@ class HumanPlayer
       return false
     end
 
-    if @game.gameboard[start[0]][start[1]].team != @team
+    if @game.gameboard[start[0]][start[1]].team != @team #I like that you have this check. 
       puts "This is not your piece"
       return false
     end
@@ -209,7 +209,7 @@ class Piece
     end
   end
 
-  def find_possible_trail(current_loc)
+  def find_possible_trail(current_loc) #a little long but this method but useful for checkmate
     every_position_possible = []
 
     self.direction.each do |path|
